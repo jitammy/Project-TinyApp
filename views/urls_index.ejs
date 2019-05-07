@@ -7,13 +7,17 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>TinyApp</title>
 </head>
-<h1>TinyApp</h1>
+
 <body style="font-size:20px; padding:50px;">
+<header>
+    <% include ./partials/_header %>
+</header>
     <!-- Add EJS code here -->
-    <p>This is where you will see the list of TinyApp</p>
+    <br>
+    <h4>My URLs</h4>
     <% if(urls) {%>
         <%for ( var key in urls) {%>
-          <li><%= key %> :<a href='#' ><%= urls[key] %></a></li>
+          <li><b><%= key %></b> : <a href='#' ><%= urls[key] %></a></li>
       <%}%>
       <% }%>
       <%
