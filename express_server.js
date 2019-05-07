@@ -25,3 +25,16 @@ app.get("/urls.json", (req, res) => {
 app.get("/hello", (req, res) => {
     res.send("<html><body>Hello <b>World</b></body></html>\n");
   });
+
+app.get("/urls", (req, res) => {
+let templateVars = { 
+    urls: urlDatabase 
+    };
+res.render("urls_index", templateVars);
+});
+
+// Since we're following the Express convention of using a views directory, we can take advantage
+// of a useful EJS shortcut! EJS automatically knows to look inside the views directory for any
+// template files that have the extension .ejs. This means we don't need to tell it where to find
+// them. It also means that we do not need to include the extension of the filename when
+// referencing it.
