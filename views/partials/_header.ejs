@@ -66,27 +66,29 @@ Users will type in any username into this form in order to "sign in" for now. --
 }
 </style>
 <% if(username){ %>
+<form action="/logout", method="POST">
  <div class="topnav">
-            <a class="active" >Logged in as TinyApper User <%= username%> </a>
-            <div class="login-container">
-                <button type="submit">Logout</button>
-            </div>
+    <a class="active">Welcome! Your username is  <%= username%> </a>
+        <div class="login-container">
+            <button type="submit" style="width: 100px">Logout</button>
         </div>
+</div>
+</form>
 <% } else { %>
 <form action="/login", method="POST">
-        <div class="topnav">
-            <a class="active" href="/urls">Home</a>
+    <div class="topnav">
+        <a class="active" href="/urls" style="width: 100px ">Home</a>
             <div class="login-container">
-                <input type="text" placeholder="email" name="email">
-                <input type="text" placeholder="password" name="password">
-                <button type="submit">Login</button>
+                <input type="text" placeholder="email" name="email" style="width: 300px">
+                <input type="text" placeholder="password" name="password" style="width: 300px">
+                <button type="submit" style="width: 100px ">Login</button>
             </div>
-        </div>
-        </form>
+    </div>
+</form>
 <% } %>
-    
-    
-
 <br>
 <h1>TinyApp</h1>
-<a href = '#'> Create New TinyURL </a>
+<br>
+<a href = '#'>Create New TinyURL </a>
+<br>
+<br>

@@ -26,7 +26,7 @@ var urlDatabase = {
     "9sm5xK": "http://www.google.com"
 };
 const userDatabase = {}
-// const filterUser = id => userDatabase.find(user => user.id === Number(id));
+
 // get 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -49,14 +49,19 @@ app.get("/urls", (req, res) => {
 });
 // get create new url page
 app.get("/urls/new", (req, res) => {
-    res.render("urls_new");
+    let templateVars ={
+        username: req.cookies["username"]
+    }
+    console.log(templateVars)
+    res.render("urls_new", templateVars);
 });
 // get reading shortURL 
 app.get("/urls/:shortURL", (req, res) => {
     // console.log("hello")
     let templateVars = {
         shortURL: req.params.shortURL,
-        longURL: urlDatabase[req.params.shortURL] 
+        longURL: urlDatabase[req.params.shortURL],
+        username: req.cookies["username"]
     };
     res.render("urls_show", templateVars);
 });
@@ -88,6 +93,10 @@ app.post('/urls/:shortURL', (req, res)=>{
 }) 
 app.post('/login',(req, res)=> {
     res.cookie('username', req.body.email)
+    res.redirect('/urls')
+})
+app.post('/logout', (req,res)=>{
+    res.clearCookie('username')
     res.redirect('/urls')
 })
 // listen on port 8080 for http requst
