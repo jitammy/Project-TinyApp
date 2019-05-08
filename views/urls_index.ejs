@@ -6,50 +6,23 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>TinyApp</title>
-  <style>  
-        div{  
-            float: left ;  
-            padding-right: 10px
-        }
-    </style>  
 </head>
 <body style="font-size:20px; padding:50px;">
 <header>
     <% include ./partials/_header %>
 </header>
-    <!-- Add EJS code here -->
-    <br>
     <h4>My URLs</h4>
     <div>
-        <ul>
-            <style>
-                .inlinestyle {
-                    display: flex ;
-                }
-                form {
-                    padding-left: 10px;
-                }
-                a {
-                    padding-left: 20px;
-                }
-                </style> 
-    <% if(urls) {%>
-        <%for ( var key in urls) {%>
-            <div class = "inlinestyle">
+        <% if(urls) {%>
+            <%for ( var key in urls) {%>
                 <li><b><%= key %></b> &rarr; <a href='#' ><%= urls[key] %></a></li>
                 <a href="#">EDIT</a>
-                
                 <form method="POST" action="/urls/<%= key %>/delete">
                 <button type="submit" >Delete</button>
                 </form>
-            </div>
-            <br /> 
-            <br /> 
-      <%}%>
+                <br /> 
+            <%}%>
       <% }%>
-      <%
-      %> 
-            </ul>
     </div>
 </ul>
 </body>

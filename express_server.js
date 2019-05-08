@@ -4,10 +4,12 @@ var app = express();
 var PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 var morgan = require('morgan');
+var cookieParser = require('cookie-parser')
 // app use
 app.set("view engine", "ejs")
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('short'));
+app.use(cookieParser())
 // functions
 function generateRandomString(){
     let random_string = '';
@@ -73,11 +75,12 @@ app.post('/urls/:shortURL/delete', (req, res) => {
     delete urlDatabase[req.params.shortURL]
     res.redirect('/urls')
 })
+// post assign new longURL to your shortURL
 app.post('/urls/:shortURL', (req, res)=>{
     // console.log(req.body.longURL)
     urlDatabase[req.params.shortURL] = req.body.longURL
+    console.log(req.params.shortURL)
     res.redirect('/urls')
-
 }) 
 // listen on port 8080 for http requst
 app.listen(PORT, () => {
