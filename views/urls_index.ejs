@@ -6,8 +6,13 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>TinyApp</title>
+  <style>  
+        div{  
+            float: left ;  
+            padding-right: 10px
+        }
+    </style>  
 </head>
-
 <body style="font-size:20px; padding:50px;">
 <header>
     <% include ./partials/_header %>
@@ -15,16 +20,32 @@
     <!-- Add EJS code here -->
     <br>
     <h4>My URLs</h4>
+    <div>
+        <ul>
+            <style>
+                .inlinestyle {
+                    display: flex ;
+                }
+                form {
+                    padding-left: 10px;
+                }
+                </style> 
     <% if(urls) {%>
         <%for ( var key in urls) {%>
-          <li><b><%= key %></b> : <a href='#' ><%= urls[key] %></a></li>
+            <div class = "inlinestyle">
+                <li><b><%= key %></b> &rarr; <a href='#' ><%= urls[key] %></a></li>
+                <form method="POST" action="/urls/<%= key %>/delete">
+                <button type="submit" >Delete</button>
+                </form>
+            </div>
+            <br /> 
+            <br /> 
       <%}%>
       <% }%>
       <%
-      // A list or table of the URLs and their shortened forms. If you need a reminder on how to
-      //loop through data with EJS, take another peek at the What is a Template Engine? Reading. -->
-      // A link for shortening a new URL. This will be a dead link for now (href='#') as we will
-      //build the page for this functionality later. -->
       %> 
+            </ul>
+    </div>
+</ul>
 </body>
 </html>
