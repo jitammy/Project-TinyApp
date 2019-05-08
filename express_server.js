@@ -73,6 +73,12 @@ app.post('/urls/:shortURL/delete', (req, res) => {
     delete urlDatabase[req.params.shortURL]
     res.redirect('/urls')
 })
+app.post('/urls/:shortURL', (req, res)=>{
+    console.log(req.body.longURL)
+    urlDatabase[req.params.shortURL] = req.body.longURL
+    res.redirect('/urls')
+
+}) 
 // listen on port 8080 for http requst
 app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}!`);

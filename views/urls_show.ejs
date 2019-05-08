@@ -13,5 +13,9 @@
 <br>
 <h4>TinyURL for : <%= longURL %></h4> 
 <p><%= shortURL %> </p>
+    <form action="/urls/<%= shortURL %>" method="POST">
+        <input type="text" placeholder="longURL" name="longURL">
+        <button type="submit">Submit</button>
+    </form>
 </body>
 </html>
