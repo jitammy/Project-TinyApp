@@ -22,9 +22,11 @@ function generateRandomString(){
 }
 // database
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+    "b2xVn2": "http://www.lighthouselabs.ca",
+    "9sm5xK": "http://www.google.com"
 };
+const userDatabase = {}
+// const filterUser = id => userDatabase.find(user => user.id === Number(id));
 // get 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -39,8 +41,10 @@ app.get("/hello", (req, res) => {
 //  get home page
 app.get("/urls", (req, res) => {
     let templateVars = { 
-        urls: urlDatabase 
+        urls: urlDatabase,
+        username: req.cookies["username"]
     };
+    console.log(templateVars)
     res.render("urls_index", templateVars);
 });
 // get create new url page
@@ -82,6 +86,10 @@ app.post('/urls/:shortURL', (req, res)=>{
     console.log(req.params.shortURL)
     res.redirect('/urls')
 }) 
+app.post('/login',(req, res)=> {
+    res.cookie('username', req.body.email)
+    res.redirect('/urls')
+})
 // listen on port 8080 for http requst
 app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}!`);
