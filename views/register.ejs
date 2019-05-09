@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>TinyApp User Auth</title>
+</head>
+<body>
+  <h1>
+    Register!
+  </h1>
+  <div>
+    <a href="/">Back to Home</a>
+  </div>
+  <div>
+    Already have an account? You can <a href="/login">login here</a>
+  </div>
+  <form action="/register" method="POST">
+    <div>
+      <label for="email">Username:</label>
+      <input type="email" name="email" placeholder="Enter your email" />
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" name="password" placeholder="Enter a Password" />
+    </div>
+    <div>
+      <label for="password_confirm">Password Confirmation:</label>
+      <input type="password" name="password_confirm" placeholder="Enter your Password again" />
+    </div>
+    <div>
+      <input type="submit" value="Register" />
+    </div>
+  </form>
+</body>
+</html>

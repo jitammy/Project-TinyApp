@@ -34,6 +34,13 @@ Users will type in any username into this form in order to "sign in" for now. --
   border: none;
   width:120px;
 }
+.topnav input[type=email] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+  width:120px;
+}
 .topnav .login-container button {
   float: right;
   padding: 6px 10px;
@@ -65,10 +72,10 @@ Users will type in any username into this form in order to "sign in" for now. --
   }
 }
 </style>
-<% if(username){ %>
+<% if(user){ %>
 <form action="/logout", method="POST">
  <div class="topnav">
-    <a class="active">Welcome! Your username is  <%= username%> </a>
+    <a class="active">Welcome! Your username is  <%= user.email%> </a>
         <div class="login-container">
             <button type="submit" style="width: 100px">Logout</button>
         </div>
@@ -79,7 +86,7 @@ Users will type in any username into this form in order to "sign in" for now. --
     <div class="topnav">
         <a class="active" href="/urls" style="width: 100px ">Home</a>
             <div class="login-container">
-                <input type="text" placeholder="email" name="email" style="width: 300px">
+                <input type="email" placeholder="email..." name="email" style="width: 300px">
                 <input type="text" placeholder="password" name="password" style="width: 300px">
                 <button type="submit" style="width: 100px ">Login</button>
             </div>
