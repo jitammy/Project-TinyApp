@@ -1,21 +1,19 @@
 <style>
-@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+body {
+  background-color: bisque
+}
 .topnav {
   overflow: hidden;
   background-color: #e9e9e9;
 }
 .topnav a {
-  float: left;
+  float:inline-start;
   display: block;
   color: black;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
   font-size: 17px;
-}
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
 }
 .topnav a.active {
   background-color: #2196F3;
@@ -24,26 +22,15 @@
 .topnav .login-container {
   float: right;
 }
-.topnav input[type=text] {
-  padding: 6px;
-  margin-top: 8px;
-  font-size: 17px;
-  border: none;
-  width:120px;
-}
-.topnav input[type=email] {
-  padding: 6px;
-  margin-top: 8px;
-  font-size: 17px;
-  border: none;
-  width:120px;
-}
 .topnav .login-container button {
+  display: flex;
+  align-content: flex-end;
   float: right;
-  padding: 6px 10px;
+  padding: 6px 6px;
   margin-top: 8px;
   margin-right: 16px;
-  background-color: #555;
+  border-radius: 15px;
+  background-color: rgb(153, 216, 179);
   color: white;
   font-size: 17px;
   border: none;
@@ -64,13 +51,8 @@
     margin: 0;
     padding: 14px;
   }
-  .topnav input[type=text] {
-    border: 1px solid #ccc;  
-  }
-} </style>
- <%# Modify _header.ejs to display a "Register" link (pointing to the registration page)
-and a "Login" link (pointing to the login page) for users that are not logged in. If a user is
-logged in, then the header should display a logout button. %> 
+} 
+</style>
 <% if(user){ %> 
 <form action="/logout", method="POST"> 
 <div class="topnav">
@@ -86,13 +68,14 @@ logged in, then the header should display a logout button. %>
 <br>
 <% } else {%>
 <div class="topnav">
+    <a class="active">Please register or login! </a>
     <div class="login-container">
+        <button type="submit">
+            <a href="/register">Register</a>
+          </button>
+      <button type="submit">
         <a href="/login">Login</a>
-    </div>
-</div>
-<div class="topnav">
-    <div class="login-container">
-        <a href="/register">Register</a>
+      </button>
     </div>
 </div>
 <% } %>
