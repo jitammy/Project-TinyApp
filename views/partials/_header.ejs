@@ -1,4 +1,5 @@
 <style>
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
 .topnav {
   overflow: hidden;
   background-color: #e9e9e9;
@@ -73,7 +74,7 @@ logged in, then the header should display a logout button. %>
 <% if(user){ %> 
 <form action="/logout", method="POST"> 
 <div class="topnav">
-    <a class="active">Welcome! Your username is  <%= user.email%> </a>
+    <a class="active">Welcome! Your email is  <%= user.email%> </a>
         <div class="login-container">
             <button type="submit" style="width: 100px">Logout</button>
         </div>

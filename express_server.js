@@ -44,8 +44,8 @@ var urlDatabase = {
 const users = { 
     "userRandomID": {
       id: "userRandomID", 
-      email: "user@example.com", 
-      password: "purple-monkey-dinosaur"
+      email: "a@a", 
+      password: "a"
     },
 }
 // get 
@@ -117,7 +117,7 @@ app.get("/register", (req, res)=>{
 })
 app.get("/login", (req, res)=>{
 
-    res.render("login", templateVars)
+    res.render("login")
 })
 // post: delete
 app.post('/urls/:shortURL/delete', (req, res) => {
