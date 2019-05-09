@@ -25,28 +25,76 @@ function generateRandomString(){
         random_ascii = Math.floor((Math.random() * 25) + 97);
         random_string += String.fromCharCode(random_ascii)
     }
+    if (checkIdExists(random_string)) {
+        generateRandomString();
+    } 
     return random_string
 }
+//add new users
+function addNewUser(email, password) {
+    let userId = generateRandomString();
+    users[userId] = {
+      id: userId,
+      email: email,
+      password: bcrypt.hashSync(password, 10)
+    }
+    return userId
+  }
+  // check if a give Email is already in teh users
+  function checkEmailExists(email) {
+    for (user in users) {
+      if(users[user].email === email){
+        return true
+      }
+    }
+    return false
+  }
+  // check if a give ID is already in the users/urlsDatabase
+  function checkIdExists(userId){
+    if (userId in users) {
+      return true
+    } else if (userId in urlDatabase) {
+      return true
+    }
+    return false
+  }
+  //returns the URLs created by currently logged in user
+  function urlsForUser(id) {
+    let userUrls = {};
+    for (var shortURL in urlDatabase){
+      if (urlDatabase[shortURL].userID === id) {
+        userUrls[shortURL] = {...urlDatabase[shortURL]}
+      }
+    }
+    return userUrls
+  }
 // iterate users database to check if user email exist to decide whether register the user
 function getUserByEmail(email){
     for(user in users){
-        if(user.email === email){
-            return user
+        if(users[user].email === email){
+            return users[user]
         }
     }
-    return false;
 }
 // database
 var urlDatabase = {
-    "b2xVn2": "http://www.lighthouselabs.ca",
-    "9sm5xK": "http://www.google.com"
-};
-const users = { 
-    "userRandomID": {
-      id: "userRandomID", 
-      email: "a@a", 
-      password: "a"
+    "b2xVn2": {
+        ShortURL: "b2xVn2",
+        longURL:"http://www.lighthouselabs.ca",
+        userID: "user1"
     },
+    "9sm5xK": {
+        shortURL: "9sm5xK",
+        longURL:"http://www.google.com",
+        userID: "user2"
+    }
+}
+const users = { 
+    "user1": {
+      id: "user1", 
+      email: "a@a", 
+      password: bcrypt.hashSync('a', 10)
+    }
 }
 // get 
 app.get("/", (req, res) => {
@@ -78,7 +126,6 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
     let templateVars ={
         user: users[req.session.user_id],
-
     }
     console.log(templateVars)
     res.render("urls_new", templateVars);
@@ -90,7 +137,6 @@ app.get("/urls/:shortURL", (req, res) => {
         shortURL: req.params.shortURL,
         longURL: urlDatabase[req.params.shortURL],
         user: users[req.session.user_id],
-
     };
     res.render("urls_show", templateVars);
 });
@@ -104,7 +150,6 @@ app.post("/urls", (req, res) => {
     res.status(200)
     let templateVars = {
         user: users[req.session.user_id],
-
     }
     res.redirect(`/urls/${randomString}`, templateVars)
 });
@@ -116,7 +161,6 @@ app.get("/register", (req, res)=>{
     res.render("register")
 })
 app.get("/login", (req, res)=>{
-
     res.render("login")
 })
 // post: delete
@@ -134,62 +178,36 @@ app.post('/urls/:shortURL', (req, res)=>{
 app.post('/login',(req, res)=> {
     // req.session('username', req.body.username)
     // res.redirect('/urls')
-    const {email, password}= req.body
-    if (email && password) {
-        if (getUserByEmail(email)){
-            bcrypt.compare(password, user.password, (err, result)=>{
-                if(err){
-                    console.log(" Error checking passwords", err)
-                    res.redirect('/login')
-                } else if (result){
-                    req.session.user_id = user_id
-                    res.redirect('/urls')
-                } else {
-                    res.send(403, `Password in valid`)
-                }
-            })
-        } else {
-            res.send(403, `Invalid user or password`)
-        }
-    } else {
-        res.send(400, `Pls provide valid user information`)
-    }
+    const { email, password } = req.body
+    if (email === "" || password === "") {
+        res.status(403).send(`Please provide email and password`)
+      } else if (checkEmailExists(email) === false ){
+        res.status(403).send(`No account record`)
+      } else if (bcrypt.compareSync(password, getUserByEmail(email).password)){
+        req.session.user_id = getUserByEmail(email).id
+        res.redirect("/urls")
+      } else {
+        res.status(403).send(`Please check your email and password and try again`)
+      }
+      console.log(users)
 })
 app.post('/logout', (req,res)=>{
     req.session.user_id = null
     res.redirect('/urls')
 })
 app.post("/register", (req, res)=>{
-    let randomUserID = generateRandomString()
-    const {email, password, password_confirm}= req.body
-    console.log(req.body)
-    if(getUserByEmail(email)){
-        res.send(400, `<h2>"BAD REQUEST USER ALREADY EXIST"</h2>`)
-    } else {
-        if ( email && password && password_confirm){
-            if(password === password_confirm){
-                bcrypt.hash(password, 10 ,(err, password_hashed)=>{
-                    if (err){
-                        console.log("Got an error hashing the password")
-                        res.redirect("/register")
-                    } else {
-                        users[randomUserID] = {
-                            user_id: randomUserID,
-                            email: email,
-                            password: password_hashed
-                        }
-                    req.session.user_id = randomUserID
-                    res.redirect("/urls")
-                    }
-                })
-            } else {
-                console.log("password not match")
-                res.redirect ("/register")
-            }
-        } else if(!email || !password || !password_confirm){
-            res.send(400, `<h2>BAD REQUEST PLSESE INPUT REGISTRATION INFO</h2>`)
-        } 
-    }
+    const {email, password}= req.body
+    if (email === "" || password === "" ) {
+        res.status(400).send(`Please provide email and password!`);
+      } else if (checkEmailExists(email)){
+        res.status(404).send(`This email already has an account!`)
+      } else {
+        let userId = addNewUser(email, password);
+        req.session.user_id = userId;
+        res.redirect("/urls")
+      }
+      console.log(users)
+      console.log(urlDatabase)
 })
 // listen on port 8080 for http requst
 app.listen(PORT, () => {
