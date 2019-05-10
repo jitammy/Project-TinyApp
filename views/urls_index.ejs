@@ -29,7 +29,7 @@
         <% if(urls) {%>
             <%for ( var key in urls) {%>
                 <li>
-                    <b><%= key %></b> &rarr; <a><%= urls[key] %></a>
+                    <b><%= key %></b> &rarr; <a><%= urls[key].longURL %></a>
                     <form method="GET" action="/urls/<%= key %>">
                     <button type="submit" >Edit</a></button>
                     <form method="POST" action="/urls/<%= key %>/delete">

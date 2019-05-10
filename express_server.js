@@ -26,9 +26,9 @@ function generateRandomString(){
         random_ascii = Math.floor((Math.random() * 25) + 97);
         random_string += String.fromCharCode(random_ascii)
     }
-    if (checkIdExists(random_string)) {
-        generateRandomString();
-    } 
+    // if (checkIdExists(random_string)) {
+    //     generateRandomString();
+    // } 
     return random_string
 }
 //add new users
@@ -63,7 +63,7 @@ function addNewUser(email, password) {
   function urlsForUser(id) {
     let userUrls = {};
     for (var shortURL in urlDatabase){
-      if (urlDatabase[shortURL].userID === id) {
+      if (urlDatabase[shortURL].userId === id) {
         userUrls[shortURL] = {...urlDatabase[shortURL]}
       }
     }
@@ -82,12 +82,12 @@ var urlDatabase = {
     "b2xVn2": {
         ShortURL: "b2xVn2",
         longURL:"http://www.lighthouselabs.ca",
-        userID: "user1"
+        userId: "user1"
     },
     "9sm5xK": {
         shortURL: "9sm5xK",
         longURL:"http://www.google.com",
-        userID: "user2"
+        userId: "user1"
     }
 }
 const users = { 
@@ -115,7 +115,8 @@ app.get("/urls", (req, res) => {
         console.log(templateVars)
         res.render("urls_index", templateVars)
     } else {
-        res.status(401).send(`Unauthorized! Pls login or register first`)
+        res.redirect("login")
+        // res.status(401).send(`Unauthorized! Pls login or register first`)
     } 
 });
 // get create new url page
@@ -132,7 +133,7 @@ app.get("/urls/new", (req, res) => {
 });
 // get reading shortURL 
 app.get("/urls/:shortURL", (req, res) => {
-    if(req.session.user_id = urlDatabase[req.params.shortURL].userID){
+    if(req.session.user_id === urlDatabase[req.params.shortURL].userId){
         let templateVars = {
             shortURL: req.params.shortURL,
             longURL: urlDatabase[req.params.shortURL].longURL,
@@ -154,50 +155,26 @@ app.get("/u/:shortURL", (req, res) => {
     }
 })
 app.get("/register", (req, res)=>{
-    if(req.session.user_id){
-        let templateVars = {
-            shortURL: req.params.shortURL,
-            longURL: urlDatabase[req.params.shortURL].longURL,
-            user: users[req.session.user_id],
-        }
-        res.redirect('urls', templateVars)
-    } else {
         res.render("register")
-    }
 })
 app.get("/login", (req, res) => {
-    if(req.session.user_id){
-        let templateVars = {
-            shortURL: req.params.shortURL,
-            longURL: urlDatabase[req.params.shortURL].longURL,
-            user: users[req.session.user_id],
-        }
-        res.redirect('urls', templateVars)
-    } else {
-        res.render("login")
-    }
+   res.render('login')
 })
 app.post("/urls", (req, res) => {
-    if(req.session.user_id){
-        let randomString = generateRandomString()
-        urlDatabase[randomString] = {
-            longURL: req.body.longURL,
-            userID: req.session.user_id
-        }
-        let templateVars = {
-        user: users[req.session.user_id]
-        }
-        res.redirect(`/urls/${randomString}`, templateVars)
-    } else {
-        res.status(401).send(`Unauthorized user`)
+    let randomString = generateRandomString()
+    urlDatabase[randomString] = {
+        longURL: [req.body.longURL],
+        userId: req.session.user_id
     }
+    console.log(urlDatabase)
+    res.redirect(`/urls/${randomString}`)
 })
 // post: delete
 app.post('/urls/:shortURL/delete', (req, res) => {
     if(req.session.user_id){
         delete urlDatabase[req.params.shortURL]
         res.redirect('urls')
-    } else if (req.session.user_id !== urlDatabase[req.params.shortURL].userID){
+    } else if (req.session.user_id !== urlDatabase[req.params.shortURL].userId){
         res.status(401).send(`This is not your URL`)
     } else {
         res.status(401).send(`Unauthorized user`)
@@ -205,14 +182,13 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 })
 // post assign new longURL to your shortURL
 app.post('/urls/:shortURL', (req, res) => {
-    if(req.session.user_id === urlDatabase[req.params.shortURL].userID ){
-        urlDatabase[req.params.shortURL].longURL = req.body.longURL
-        res.redirect('/urls')
-    } else if (!req.session.user_id){
-        res.status(401).send(`Unauthorized user`)
-    } else {
-        res.status(401).send(`This is not your URL`)
-    }
+    if (req.session.user_id) {
+        urlDatabase[req.params.shortURL]['longURL'] = req.body.longURL;
+        res.redirect("/urls")
+        console.log(urlDatabase)
+      } else {
+        res.redirect("login")
+      }
 }) 
 app.post('/login',(req, res)=> {
     const { email, password } = req.body
