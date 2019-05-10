@@ -22,25 +22,28 @@
 <header>
     <% include ./partials/_header %>
 </header>
-    <h4>My URLs</h4>
+    <h2>My Shorted URLs</h2>
+
 <br>
     <div>
         <% if(urls) {%>
             <%for ( var key in urls) {%>
-            <li>
-                <b><%= key %></b> &rarr; <a href='#' ><%= urls[key] %></a>
-                <form method="GET" action="/urls/<%= key %>">
-                <button type="submit" >Edit</a></button>
-                <form method="POST" action="/urls/<%= key %>/delete">
-                <button type="submit" >Delete</button>
-                </form>
-            </li>
-            <br>
-            <%}%>
-        <li>
-            <a href=" /urls/new">Create a New Short Link</a>
-        </li>
-      <% }%>
+                <li>
+                    <b><%= key %></b> &rarr; <a><%= urls[key] %></a>
+                    <form method="GET" action="/urls/<%= key %>">
+                    <button type="submit" >Edit</a></button>
+                    <form method="POST" action="/urls/<%= key %>/delete">
+                    <button type="submit" >Delete</button>
+                    </form>
+                </li>
+                <br>
+                <%}%>
+                <li>
+                    <form action="/urls/new" method="GET">
+                    <a href="/urls/new">Create a New Short Link</a>
+                    </form>
+                </li>
+        <%}%>
     </div>
 </ul>
 </body>

@@ -14,7 +14,8 @@ app.use(morgan('short'));
 app.use(
     cookieSession({
         name: 'session',
-        keys: ['my super secret cookie']
+        keys: ['my super secret cookie'],
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
     })
 )
 // functions
@@ -109,10 +110,10 @@ app.get("/urls", (req, res) => {
     if(req.session.user_id){
         let templateVars = { 
             user: users[req.session.user_id],
-            urls: urlsForUser(req.session.user_id),
-        };
+            urls: urlsForUser(req.session.user_id)
+        }
         console.log(templateVars)
-        res.render("urls_index", templateVars);
+        res.render("urls_index", templateVars)
     } else {
         res.status(401).send(`Unauthorized! Pls login or register first`)
     } 
@@ -120,11 +121,11 @@ app.get("/urls", (req, res) => {
 // get create new url page
 app.get("/urls/new", (req, res) => {
     if(req.session.user_id){
-        let templateVars ={
-                user: users[req.session.user_id]
-            }
-            console.log(templateVars)
-            res.render("urls_new", templateVars);
+        let templateVars = {
+            user: users[req.session.user_id]
+        }
+        console.log(templateVars)
+        res.render("urls_new", templateVars);
     } else {
         res.redirect('login')
     }
@@ -144,14 +145,14 @@ app.get("/urls/:shortURL", (req, res) => {
     else {
         res.redirect('login')
     }
-}
+})
 app.get("/u/:shortURL", (req, res) => {
-    if(req.session.user_id){
+    if(urlDatabase.hasOwnProperty([req.params.shortURL])) {
         res.redirect(urlDatabase[req.params.shortURL].longURL);
     } else {
         res.status(401).send(`Unauthorized user`)
     }
-});
+})
 app.get("/register", (req, res)=>{
     if(req.session.user_id){
         let templateVars = {
@@ -164,7 +165,7 @@ app.get("/register", (req, res)=>{
         res.render("register")
     }
 })
-app.get("/login", (req, res)=>{
+app.get("/login", (req, res) => {
     if(req.session.user_id){
         let templateVars = {
             shortURL: req.params.shortURL,
@@ -179,7 +180,10 @@ app.get("/login", (req, res)=>{
 app.post("/urls", (req, res) => {
     if(req.session.user_id){
         let randomString = generateRandomString()
-        urlDatabase[randomString] = req.body.longURL
+        urlDatabase[randomString] = {
+            longURL: req.body.longURL,
+            userID: req.session.user_id
+        }
         let templateVars = {
         user: users[req.session.user_id]
         }
@@ -187,7 +191,7 @@ app.post("/urls", (req, res) => {
     } else {
         res.status(401).send(`Unauthorized user`)
     }
-});
+})
 // post: delete
 app.post('/urls/:shortURL/delete', (req, res) => {
     if(req.session.user_id){
@@ -200,7 +204,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
     }
 })
 // post assign new longURL to your shortURL
-app.post('/urls/:shortURL', (req, res)=>{
+app.post('/urls/:shortURL', (req, res) => {
     if(req.session.user_id === urlDatabase[req.params.shortURL].userID ){
         urlDatabase[req.params.shortURL].longURL = req.body.longURL
         res.redirect('/urls')
@@ -211,8 +215,6 @@ app.post('/urls/:shortURL', (req, res)=>{
     }
 }) 
 app.post('/login',(req, res)=> {
-    // req.session('username', req.body.username)
-    // res.redirect('/urls')
     const { email, password } = req.body
     if (email === "" || password === "") {
         res.status(403).send(`Please provide email and password`)
@@ -226,7 +228,7 @@ app.post('/login',(req, res)=> {
       }
       console.log(users)
 })
-app.post("/register", (req, res)=>{
+app.post("/register", (req, res) => {
     const {email, password}= req.body
     if (email === "" || password === "" ) {
         res.status(400).send(`Please provide email and password!`);
@@ -235,16 +237,16 @@ app.post("/register", (req, res)=>{
     } else {
         let userId = addNewUser(email, password);
         req.session.user_id = userId;
-        res.redirect("/urls")
+        res.redirect("urls")
     }
     console.log(users)
     console.log(urlDatabase)
 })
-app.post('/logout', (req,res)=>{
+app.post('/logout', (req,res) => {
     req.session.user_id = null
-    res.redirect('/urls')
+    res.redirect('urls')
 })
 // listen on port 8080 for http requst
 app.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}!`);
-});
+    console.log(`Example app listening on port ${PORT}!`)
+})
