@@ -1,19 +1,16 @@
 # Project-TinyApp
-
 ## User Stories
-As an avid twitter poster, 
-I want to be able to shorten links 
-so that I can fit more non-link text in my tweets.
+As an avid twitter poster, &nbsp;
+I want to be able to shorten links &nbsp;
+so that I can fit more non-link text in my tweets.&nbsp;
 
-As a twitter reader, 
-I want to be able to visit sites via shortened links, 
-so that I can read interesting content.
+As a twitter reader, &nbsp;
+I want to be able to visit sites via shortened links, &nbsp;
+so that I can read interesting content.&nbsp;
 
 ![login page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/login.png )
-![Register page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/register.png)
 ![Main page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/main.png)
 ![Create page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/create.png)
-
 ## Dependencies:
 - Node.js
 - Express
