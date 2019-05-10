@@ -9,7 +9,7 @@ I want to be able to visit sites via shortened links, &nbsp;
 so that I can read interesting content.&nbsp;
 
 ![login page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/login.png )
-![Main page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/main.png)
+![Main page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/login.png)
 ![Create page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/create.png)
 ## Dependencies:
 - Node.js
