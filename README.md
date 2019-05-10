@@ -9,10 +9,10 @@ As a twitter reader,
 I want to be able to visit sites via shortened links, 
 so that I can read interesting content.
 
-![login page](../../views/images/create.png)
-![Register page](../../views/images/register.png)
-![Main page](../../views/images/main.png)
-![Create page](../../views/images/create.png)
+![login page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/login.png )
+![Register page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/register.png)
+![Main page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/main.png)
+![Create page](https://github.com/jitammy/Project-TinyApp/blob/master/views/images/create.png)
 
 ## Dependencies:
 - Node.js
