@@ -37,27 +37,27 @@ function addNewUser(email, password) {
       password: bcrypt.hashSync(password, 10)
     }
     return userId
-  }
-  // check if a give Email is already in teh users
-  function checkEmailExists(email) {
+}
+// check if a give Email is already in users
+function checkEmailExists(email) {
     for (user in users) {
       if(users[user].email === email){
         return true
       }
     }
     return false
-  }
+}
 
-  //returns the URLs created by currently logged in user
-  function urlsForUser(id) {
+//returns the URLs created by currently logged in user
+function urlsForUser(id) {
     let userUrls = {};
     for (var shortURL in urlDatabase){
-      if (urlDatabase[shortURL].userId === id) {
-        userUrls[shortURL] = {...urlDatabase[shortURL]}
-      }
+        if (urlDatabase[shortURL].userId === id) {
+            userUrls[shortURL] = {...urlDatabase[shortURL]}
+        }
     }
     return userUrls
-  }
+}
 // iterate users database to check if user email exist to decide whether register the user
 function getUserByEmail(email){
     for(user in users){
@@ -88,7 +88,7 @@ const users = {
       password: bcrypt.hashSync('a', 10)
     }
 }
-// get 
+// get root direcotry
 app.get("/", (req, res) => {
     if(req.session.user_id){
         res.redirect("/urls")
@@ -106,8 +106,8 @@ app.get("/urls", (req, res) => {
         console.log(templateVars)
         res.render("urls_index", templateVars)
     } else {
-        res.redirect("/login")
-        // res.status(401).send(`Unauthorized! Pls login or register first`)
+        // res.redirect("/login")
+        res.status(401).send(`Unauthorized! Pls login or register first`)
     } 
 });
 // get create new url page
