@@ -9,10 +9,10 @@ As a twitter reader,
 I want to be able to visit sites via shortened links, 
 so that I can read interesting content.
 
-![login page](../images/login.png)
-![Register page](../images/register.png)
-![Main page](../images/main.png)
-![Create page](../images/create.png)
+![login page](../views/images/create.png)
+![Register page](../views/images/register.png)
+![Main page](../views/images/main.png)
+![Create page](../views/images/create.png)
 
 ### Dependencies:
 - Node.js
