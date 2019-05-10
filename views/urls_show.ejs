@@ -10,6 +10,10 @@
 <header>
     <% include ./partials/_header %>
 </header>
+
+<form action="/urls" method="GET">
+    <a href="/urls">URLs</a>
+</form>
 <br>
 <h4>TinyURL for : <%= longURL %></h4> 
 <p><%= shortURL %> </p>

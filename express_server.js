@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const morgan = require('morgan');
 const cookieSession = require('cookie-session')
 const bcrypt = require('bcrypt')
+const timestamp = require('time-stamp');
 // app use
 app.set("view engine", "ejs")
 app.use(bodyParser.urlencoded({extended: true}));
@@ -15,7 +16,6 @@ app.use(
     cookieSession({
         name: 'session',
         keys: ['my super secret cookie'],
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
     })
 )
 // functions
@@ -26,9 +26,6 @@ function generateRandomString(){
         random_ascii = Math.floor((Math.random() * 25) + 97);
         random_string += String.fromCharCode(random_ascii)
     }
-    // if (checkIdExists(random_string)) {
-    //     generateRandomString();
-    // } 
     return random_string
 }
 //add new users
@@ -50,15 +47,7 @@ function addNewUser(email, password) {
     }
     return false
   }
-  // check if a give ID is already in the users/urlsDatabase
-  function checkIdExists(userId){
-    if (userId in users) {
-      return true
-    } else if (userId in urlDatabase) {
-      return true
-    }
-    return false
-  }
+
   //returns the URLs created by currently logged in user
   function urlsForUser(id) {
     let userUrls = {};
@@ -82,12 +71,14 @@ var urlDatabase = {
     "b2xVn2": {
         ShortURL: "b2xVn2",
         longURL:"http://www.lighthouselabs.ca",
-        userId: "user1"
+        userId: "user1",
+        createdOn: timestamp()
     },
     "9sm5xK": {
         shortURL: "9sm5xK",
         longURL:"http://www.google.com",
-        userId: "user1"
+        userId: "user1",
+        createdOn: timestamp()
     }
 }
 const users = { 
@@ -115,7 +106,7 @@ app.get("/urls", (req, res) => {
         console.log(templateVars)
         res.render("urls_index", templateVars)
     } else {
-        res.redirect("login")
+        res.redirect("/login")
         // res.status(401).send(`Unauthorized! Pls login or register first`)
     } 
 });
@@ -128,7 +119,7 @@ app.get("/urls/new", (req, res) => {
         console.log(templateVars)
         res.render("urls_new", templateVars);
     } else {
-        res.redirect('login')
+        res.redirect("/login")
     }
 });
 // get reading shortURL 
@@ -144,14 +135,14 @@ app.get("/urls/:shortURL", (req, res) => {
         res.status(401).send(`You may only edit your own URL`)
     }
     else {
-        res.redirect('login')
+        res.redirect('/login')
     }
 })
 app.get("/u/:shortURL", (req, res) => {
     if(urlDatabase.hasOwnProperty([req.params.shortURL])) {
         res.redirect(urlDatabase[req.params.shortURL].longURL);
     } else {
-        res.status(401).send(`Unauthorized user`)
+        res.status(401).send(`ShortURL not exist`)
     }
 })
 app.get("/register", (req, res)=>{
@@ -161,19 +152,26 @@ app.get("/login", (req, res) => {
    res.render('login')
 })
 app.post("/urls", (req, res) => {
-    let randomString = generateRandomString()
-    urlDatabase[randomString] = {
-        longURL: [req.body.longURL],
-        userId: req.session.user_id
+    if(req.session.user_id){
+        let randomString = generateRandomString()
+            urlDatabase[randomString] = {
+                longURL: [req.body.longURL],
+                userId: req.session.user_id,
+                createdOn: timestamp()
+            }
+        console.log(urlDatabase)
+        res.redirect(`/urls/${randomString}`)
+    } else {
+        res.status(401).send(`Unauthorized user`)
     }
-    console.log(urlDatabase)
-    res.redirect(`/urls/${randomString}`)
 })
 // post: delete
 app.post('/urls/:shortURL/delete', (req, res) => {
-    if(req.session.user_id){
+    if(req.session.user_id) {
         delete urlDatabase[req.params.shortURL]
-        res.redirect('urls')
+        console.log(urlDatabase[req.params.shortURL])
+        console.log(`req.params.shorturl is`, req.params.shortURL)
+        res.redirect('/urls')
     } else if (req.session.user_id !== urlDatabase[req.params.shortURL].userId){
         res.status(401).send(`This is not your URL`)
     } else {
@@ -185,9 +183,9 @@ app.post('/urls/:shortURL', (req, res) => {
     if (req.session.user_id) {
         urlDatabase[req.params.shortURL]['longURL'] = req.body.longURL;
         res.redirect("/urls")
-        console.log(urlDatabase)
+        // console.log(urlDatabase)
       } else {
-        res.redirect("login")
+        res.redirect("/login")
       }
 }) 
 app.post('/login',(req, res)=> {
@@ -198,7 +196,7 @@ app.post('/login',(req, res)=> {
         res.status(403).send(`No account record`)
       } else if (bcrypt.compareSync(password, getUserByEmail(email).password)){
         req.session.user_id = getUserByEmail(email).id
-        res.redirect("urls")
+        res.redirect("/urls")
       } else {
         res.status(403).send(`Please check your email and password and try again`)
       }
@@ -213,14 +211,14 @@ app.post("/register", (req, res) => {
     } else {
         let userId = addNewUser(email, password);
         req.session.user_id = userId;
-        res.redirect("urls")
+        res.redirect("/urls")
     }
     console.log(users)
     console.log(urlDatabase)
 })
 app.post('/logout', (req,res) => {
-    req.session.user_id = null
-    res.redirect('urls')
+    req.session = null
+    res.redirect('/urls')
 })
 // listen on port 8080 for http requst
 app.listen(PORT, () => {

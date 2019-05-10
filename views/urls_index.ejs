@@ -12,9 +12,13 @@
           /* align-content:space-between; */
           /* justify-content:space-between */
       }
-      a {
-          padding-right: 10px;
-          padding-left: 10px
+      button {
+          margin-left: 10px;
+          margin-right: 10px
+      }
+      .time {
+          font-size: 10px;
+          font-style: italic
       }
   </style>
 </head>
@@ -22,8 +26,7 @@
 <header>
     <% include ./partials/_header %>
 </header>
-    <h2>My Shorted URLs</h2>
-
+    <h3>My Shorted URLs</h3>
 <br>
     <div>
         <% if(urls) {%>
@@ -31,16 +34,20 @@
                 <li>
                     <b><%= key %></b> &rarr; <a><%= urls[key].longURL %></a>
                     <form method="GET" action="/urls/<%= key %>">
-                    <button type="submit" >Edit</a></button>
-                    <form method="POST" action="/urls/<%= key %>/delete">
-                    <button type="submit" >Delete</button>
+                        <button type="submit" >Edit</a></button>
                     </form>
+                    <form method="POST" action="/urls/<%= key %>/delete">
+                        <button type="submit" >Delete</button>
+                    </form>
+                    <div class = "time">
+                    CREATED on <%= urls[key].createdOn %>
+                </div>
                 </li>
                 <br>
                 <%}%>
                 <li>
                     <form action="/urls/new" method="GET">
-                    <a href="/urls/new">Create a New Short Link</a>
+                        <a href="/urls/new">Create a New Short Link</a>
                     </form>
                 </li>
         <%}%>

@@ -56,14 +56,14 @@ body {
 <% if(user){ %> 
 <form action="/logout", method="POST"> 
 <div class="topnav">
-    <a class="active">Welcome! Your email is  <%= user.email%> </a>
+    <a class="active">Welcome to TinyApp! Your email is  <%= user.email%> </a>
         <div class="login-container">
             <button type="submit" style="width: 100px">Logout</button>
         </div>
 </div>
 </form>
 <br>
-<h3>Create New TinyURL </h3>
+<h1>TinyApp </h1>
 <br>
 <br>
 <% } else {%>
