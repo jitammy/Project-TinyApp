@@ -47,7 +47,6 @@ function checkEmailExists(email) {
     }
     return false
 }
-
 //returns the URLs created by currently logged in user
 function urlsForUser(id) {
     let userUrls = {};
@@ -106,8 +105,8 @@ app.get("/urls", (req, res) => {
         console.log(templateVars)
         res.render("urls_index", templateVars)
     } else {
-        // res.redirect("/login")
-        res.status(401).send(`Unauthorized! Pls login or register first`)
+        res.redirect("/login")
+        // res.status(401).send(`Unauthorized! Pls login or register first`)
     } 
 });
 // get create new url page
@@ -116,7 +115,7 @@ app.get("/urls/new", (req, res) => {
         let templateVars = {
             user: users[req.session.user_id]
         }
-        console.log(templateVars)
+        // console.log(templateVars)
         res.render("urls_new", templateVars);
     } else {
         res.redirect("/login")
@@ -138,6 +137,7 @@ app.get("/urls/:shortURL", (req, res) => {
         res.redirect('/login')
     }
 })
+// use the generated url
 app.get("/u/:shortURL", (req, res) => {
     if(urlDatabase.hasOwnProperty([req.params.shortURL])) {
         res.redirect(urlDatabase[req.params.shortURL].longURL);
@@ -145,12 +145,15 @@ app.get("/u/:shortURL", (req, res) => {
         res.status(401).send(`ShortURL not exist`)
     }
 })
+// get register page
 app.get("/register", (req, res)=>{
         res.render("register")
 })
+// get login page
 app.get("/login", (req, res) => {
    res.render('login')
 })
+// generates a short URL
 app.post("/urls", (req, res) => {
     if(req.session.user_id){
         let randomString = generateRandomString()
@@ -159,18 +162,16 @@ app.post("/urls", (req, res) => {
                 userId: req.session.user_id,
                 createdOn: timestamp()
             }
-        console.log(urlDatabase)
+        // console.log(urlDatabase)
         res.redirect(`/urls/${randomString}`)
     } else {
         res.status(401).send(`Unauthorized user`)
     }
 })
-// post: delete
+// post: delete the URL when user logged in
 app.post('/urls/:shortURL/delete', (req, res) => {
     if(req.session.user_id) {
         delete urlDatabase[req.params.shortURL]
-        console.log(urlDatabase[req.params.shortURL])
-        console.log(`req.params.shorturl is`, req.params.shortURL)
         res.redirect('/urls')
     } else if (req.session.user_id !== urlDatabase[req.params.shortURL].userId){
         res.status(401).send(`This is not your URL`)
@@ -178,7 +179,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
         res.status(401).send(`Unauthorized user`)
     }
 })
-// post assign new longURL to your shortURL
+// assign new longURL to your shortURL
 app.post('/urls/:shortURL', (req, res) => {
     if (req.session.user_id) {
         urlDatabase[req.params.shortURL]['longURL'] = req.body.longURL;
@@ -187,7 +188,8 @@ app.post('/urls/:shortURL', (req, res) => {
       } else {
         res.redirect("/login")
       }
-}) 
+})
+// user login
 app.post('/login',(req, res)=> {
     const { email, password } = req.body
     if (email === "" || password === "") {
@@ -200,8 +202,9 @@ app.post('/login',(req, res)=> {
       } else {
         res.status(403).send(`Please check your email and password and try again`)
       }
-      console.log(users)
+    //   console.log(users)
 })
+// user registration
 app.post("/register", (req, res) => {
     const {email, password}= req.body
     if (email === "" || password === "" ) {
@@ -213,9 +216,10 @@ app.post("/register", (req, res) => {
         req.session.user_id = userId;
         res.redirect("/urls")
     }
-    console.log(users)
-    console.log(urlDatabase)
+    // console.log(users)
+    // console.log(urlDatabase)
 })
+// user logout and clear cookie
 app.post('/logout', (req,res) => {
     req.session = null
     res.redirect('/urls')
